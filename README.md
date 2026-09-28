@@ -18,7 +18,12 @@ A script that summarizes my spending from a CSV.
 - Columns present: (e.g. date, type, description, amount)
 - Date format: (e.g. DD/MM/YYYY)
 - How spending vs income is represented: (e.g. negative = spend, or separate debit/credit columns)
-- Sample row (anonymised):
+- Sample row:
+
+date,type,description,amount
+28/08/2026,expense,TESCO STORES 2087,-42.15
+30/08/2026,expense,TFL TRAVEL CH,-18.40
+31/08/2026,income,SALARY ACME LTD,1850.00
 
 ## Categorization approach
 - Method: (keyword matching / manual mapping file / other)
@@ -36,6 +41,27 @@ A script that summarizes my spending from a CSV.
 
 ## How to run it
 
+
+## Sample Output
+==============================
+ SPENDING SUMMARY: SEPTEMBER 2026
+==============================
+Total spent: £1,231.61  (23 transactions)
+
+BY CATEGORY
+Housing             £650.00   52.8%
+Groceries           £201.25   16.3%
+Shopping            £148.39   12.0%
+Eating Out           £75.80    6.2%
+Transport            £74.00    6.0%
+Health & Fitness     £39.19    3.2%
+Subscriptions        £22.98    1.9%
+Uncategorized        £20.00    1.6%
+
+TOP 3 BIGGEST PURCHASES
+1. 01/09/2026  LANDLORD RENT PAYMENT   £650.00
+2. 08/09/2026  UNIQLO ONLINE            £79.90
+3. 15/09/2026  TESCO STORES 2087        £61.05
 
 ## Decisions & things I looked up
 (running log — every time you have to Google/look something up, note it here with a one-line summary. This becomes your own reference and shows your learning process)
