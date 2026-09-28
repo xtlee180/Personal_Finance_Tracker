@@ -1,7 +1,7 @@
 # Personal Finance Tracker
 
 ## What this project does
-(1-2 sentences: what problem does it solve for you, specifically)
+A script that summarizes my spending from a CSV.
 
 ## Status
 - [ ] Planning
