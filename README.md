@@ -30,9 +30,15 @@ date,type,description,amount
 - Where rules are stored: (e.g. category_rules.json)
 - Default category for unmatched transactions: (e.g. "Uncategorized")
 - Categories in use:
-  - Groceries
+  - Shopping 
+  - Online Shopping
+  - Eating Out  
   - Transport
-  - ...
+  - Groceries
+  - Subscriptions
+  - Health
+  - Phone
+  - House
 
 ## Data structure
 - How a transaction is represented in code: (dict / namedtuple / class — and its fields)

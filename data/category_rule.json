@@ -1,0 +1,11 @@
+{
+  "Shopping": ["zara"],
+  "Online Shopping": ["uniqlo", "amazon"],
+  "Eating Out": ["pret", "costa", "deliveroo", "wagamama", "starbucks"],
+  "Transport": ["tfl", "railway", "uber"],
+  "Groceries": ["tesco", "sainsburys", "morrisons"],
+  "Subscriptions": ["netflix", "spotify", "puregym"],
+  "Health": ["boots"],
+  "Phone": ["vodafone"],
+  "House": ["rent"]
+}
