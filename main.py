@@ -2,34 +2,38 @@ import pandas as pd
 import datetime
 import json
 
-from pandas.core.interchange import column
-
 # reads the csv file and replace missing values with N/A
-data = pd.read_csv(r'C:data\sample_transaction.csv', na_values = ['N/A'])
+def load_data(file_path):
+    raw_data = pd.read_csv(file_path, na_values = ['N/A'])
+    return raw_data
 
 # check that the columns are correct and exist e.g. date, type, description, amount
-# check_columns = ['date', 'type', 'description', 'amount']
-# for column1 in df.columns:
-#     for column2 in check_columns:
-#         if column1 == column2:
-#             print(column1, column2)
-#         else:
-#             print("Missing column")
+# def validate_columns(data):
+#     check_columns = ['Date', 'Type', 'Description', 'Amount']
+#
+#     for column in check_columns:
+#         if column not in data.columns:
+#             return False
+#
+#     return True
+#
 
-# headers
-data = data[['Date', 'Type', 'Description', 'Amount']]
+def clean_data(data):
+    data = data[['Date', 'Type', 'Description', 'Amount']].copy()
 
-#convert and overwrite date to actual date format
-data['Date'] = pd.to_datetime(data['Date'], dayfirst=True)
-# convert and overwrite type and description to uppercase
-data['Type'] = data['Type'].str.lower()
-data['Description'] = data['Description'].str.lower()
-# convert and overwrite amount as float
-data['Amount'] = data['Amount'].astype(float)
+    #convert and overwrite date to actual date format
+    data['Date'] = pd.to_datetime(data['Date'], dayfirst=True)
+    # convert and overwrite type and description to uppercase
+    data['Type'] = data['Type'].str.lower()
+    data['Description'] = data['Description'].str.lower()
+    # convert and overwrite amount as float
+    data['Amount'] = data['Amount'].astype(float)
 
-# fix string
+    return data
 
-# validate and convert type
+
+data = load_data('C:data\sample_transaction.csv')
+data = clean_data(data)
 
 
 # filter the dataframe to today's month
@@ -47,15 +51,15 @@ def total_expense(data):
 
 
 with open('data/category_rule.json', 'r') as file:
-    category = json.load(file)
+    category_rules = json.load(file)
 
 def category_sort(description):
     # lower_description = description.lower()
 
-    for key, vals in category.items():
-        for val in vals:
-            if val in description:
-                return key
+    for category, keywords in category_rules.items():
+        for keyword in keywords:
+            if keyword in description:
+                return category
     return "Uncategorized"
 
 data['Category'] = data['Description'].apply(category_sort)
@@ -65,13 +69,17 @@ data['Category'] = data['Description'].apply(category_sort)
 #         if key in data['Category']:
 #             return key
 
-def group_categories():
-    group_category = abs(data.groupby('Category')['Amount'].sum()).sort_values(ascending = False)
-    sume = abs(data['Amount'].sum())
-    for key, val in group_category.items():
-        percentage = (val / sume) * 100
-        price = f'£{val:.2f}'
-        print(f'{key:<15}  {price:>8} {percentage:>8.1f}%')
+def group_categories(data):
+    category_totals = abs(data.groupby('Category')['Amount'].sum()).sort_values(ascending = False)
+    return category_totals
+
+def print_categories(category_totals, total_spent):
+
+    for category, amount in category_totals.items():
+        percentage = (amount / total_spent) * 100
+        price = f'£{amount:.2f}'
+        print(f'{category:<15}  {price:>8} {percentage:>8.1f}%')
+
 
 
 # print(group_categories(data))
