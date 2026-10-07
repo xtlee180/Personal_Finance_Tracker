@@ -9,7 +9,8 @@ def load_transactions(file_path):
 
 
 def clean_transactions(transactions):
-    transactions = transactions[['Date', 'Type', 'Description', 'Amount']].copy()
+    transactions = transactions[['Date', 'Type', 'Description', 'Amount']]
+
 
     #convert and overwrite date to actual date format
     transactions['Date'] = pd.to_datetime(transactions['Date'], dayfirst=True)
@@ -20,6 +21,7 @@ def clean_transactions(transactions):
     transactions['Amount'] = transactions['Amount'].astype(float)
 
     return transactions
+
 
 
 def filter_by_month(transactions, month, year):
@@ -33,10 +35,12 @@ def filter_by_month(transactions, month, year):
 
 # fiter to expense
 
+
 def filter_expenses(transactions):
     expenses = transactions[transactions['Type'] == 'expense']
 
     return expenses
+
 
 
 def load_category_rules(file_path):
@@ -45,13 +49,32 @@ def load_category_rules(file_path):
 
     return category_rules
 
-
 def categorize_transaction(description,category_rules):
-    for category, keywords in category_rules.items():
-        for keyword in keywords:
-            if keyword in description:
-                return category
-    return "Uncategorized"
+    # lower_description = description.lower()
+
+    # for category, keywords in category_rules.items():
+    #     for keyword in keywords:
+    #         if keyword in description:
+    #             return category
+    # return "Uncategorized"
+    # for key, value in category_rules:
+    #     if key in description:
+    #         return value
+    #     else:
+    #         return "Uncategorized"
+    # print(description)
+    # if description in category_rules.keys():
+    #     return category_rules[description]
+    # else:
+    #     return "Uncategorized"
+    # for key in category_rules.keys():
+    #     if key in description:
+    #         return category_rules[key]
+    # return "Uncategorized"
+
+    category_name = description.split(" ")[0]
+    return category_rules.get(category_name,"Uncategorized")
+
 
 def add_categories(transactions, category_rules):
     transactions = transactions.copy()
@@ -69,6 +92,7 @@ def calculate_category_totals(transactions):
     # Expenses are stored as negative values in the CSV.
     # abs() makes spending totals easier to display to the user.
     category_totals = abs(transactions.groupby('Category')['Amount'].sum()).sort_values(ascending = False)
+
     return category_totals
 
 
@@ -85,6 +109,7 @@ def print_category_summary(category_totals, total_spent):
 
 
 
+
 def print_top_expenses(transactions):
     top_expenses = get_top_expenses(transactions)
     rank = 1
@@ -97,21 +122,29 @@ def print_top_expenses(transactions):
         rank += 1
 
 
-data = load_transactions('C:data\sample_transaction.csv')
-data = clean_transaction(data)
+def top_three(data):
+    top = data.sort_values(by = ['Amount']).head(3)
+    return top
+
+
+data = load_transactions(r'/Users/xtlee180/PycharmProjects/Personal_Finance_Tracker/data/sample_transaction.csv')
+data = clean_transactions(data)
 def print_summary(transactions, month, year):
+
     current_month = datetime.datetime.now().strftime('%B')
     current_year  = datetime.datetime.now().strftime('%Y')
     total_transaction = len(data)
-
+    category_rules = load_category_rules('/Users/xtlee180/PycharmProjects/Personal_Finance_Tracker/data/sample_transaction.csv')
+    category_totals = categorize_transaction(data, category_rules)
+    total_spent = calculate_total_spent(data)
 
     print('==============================')
     print(f'SPENDING SUMMARY: {current_month.upper()} {current_year}')
     print('==============================')
-    print(f'TOTAL SPENT: £{calculate_total_spent(data)}  ({total_transaction} TRANSACTIONS) ')
+    print(f'TOTAL SPENT: £{calculate_total_spent(data):,.2f}  ({total_transaction} TRANSACTIONS) ')
     print('\n')
     print(f'BY CATEGORY:')
-    print_category_summary(calculate_category_totals(data), calculate_total_spent(data))
+    print_categories_summary(category_totals, total_spent)
     print('\n')
     print(f'TOP 3 BIGGEST PURCHASES:')
     print_top_expenses(get_top_expenses(data))
